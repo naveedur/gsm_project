@@ -1,0 +1,265 @@
+{% extends 'firmApp/basic.html'%}
+<marquee behavior="scroll" direction="left">{% block title %}Download {{Resource.title}} |{{Resource.Brand.title}} | {{Resource.Model.title}} | Firmware's {% endblock %} </marquee>
+{% load static %}
+
+{%block css %} 
+<style>
+
+
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+<nav class="container" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item " aria-current="page"><a href="/brand/{{Resource.Brand.slug}}">{{Resource.Brand.slug}}</a></li>
+      <li class="breadcrumb-item " aria-current="page"><a href="/model/{{Resource.Model.slug}}">{{Resource.Model.slug}}</a></li>
+      <li class="breadcrumb-item " aria-current="page">{{Resource.title}}</li>
+  
+    
+    </ol>
+  </nav>
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class=" First row mt-4">
+          <div class="d-flex justify-content-center col-md-3">
+            <img src="{% static 'firmApp/images/sample.jpg'%}" alt="" />
+          </div>
+          <div class="col-md-9">
+            <p align="justify">
+              Xiaomi Redmi Note 11 Pro 4G Indian with codename is vida Firmware
+              includes Global Firmware (Global ROM), China Firmware (China ROM),
+              Stable MIUI and Beta MIUI. This is full list of Xiaomi Redmi Note 11
+              Pro 4G Indian. Xiaomi Redmi Note 11 Pro 4G Indian may called with
+              other names like . China ROM, Firmware is for China region, there
+              are only English, Chinese and No Google Services. Global ROM,
+              Firmware is for Global region and almost can flash for China phone
+              with unlocked bootloader. They have multilanguage and Google
+              Services, china apps removed. All file download from MiFirm is Free.
+              Fastboot firmware, ZIP firmware is official from Xiaomi. EU ROM,
+              TWRP and Other files is unofficial. Use at your own risk.
+            </p>
+  
+          </div>
+        </div>
+        <hr width="100%" size="10" />
+
+{% if Resource.pro == False or get_pro %}
+<div class="row Second"> 
+    <div class=" col-12">
+        <div class="row mt-3">
+            <div class="col-3">
+                <h4>ID</h4>
+            </div>
+            <div class="col-6">
+                <h5>{{Resource.id}}</h5>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-3">
+                <h4>Brand</h4>
+            </div>
+            <div class="col-6">
+                <h5>{{Resource.Brand.title}}</h5>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-3">
+                <h4>Model</h4>
+            </div>
+            <div class="col-6">
+                <h5>{{Resource.Model.title}}</h5>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-3">
+                <h4>category</h4>
+            </div>
+            <div class="col-6">
+                <h5>{{Resource.Categories.title}}</h5>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-3">
+                <h4>version</h4>
+            </div>
+            <div class="col-6">
+                <h5>{{Resource.title}}</h5>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-3">
+                <h4>Size</h4>
+            </div>
+            <div class="col-6">
+                <h5>{{Resource.size}}</h5>
+            </div>
+        </div>
+
+
+        <div class="row mt-3">
+            <div class="col-3">
+                <h4>Tags</h4>
+            </div>
+            
+            <div class="col-6">
+                {% for i in Resource.Tags.all %}
+               <span> {{i}}, </span>
+                {% endfor %}
+            </div>
+            
+        </div>
+
+
+    </div>
+</div>
+<!-- <button type="button" class="btn btn-success my-3 d-flex justify-content-center">Download Here</button> -->
+<a href="{{Resource.url}}" onclick="limit()"  class="btn  btn-info mt-1">Download</a>
+<hr width="100%" size="10" />
+{% else %}
+        <div class="row Second">
+            <div class="col-md-6 col-12">
+                <h3>Payment</h3>
+                <p>pay for a file</p>
+                <a href="{{Resource.file.url}}" class="btn  btn-info mt-1">Download</a>
+                <p>OR  Buy subscription</p>
+                <a href="{% url 'membership' %}" class="btn  btn-info mt-1">Buy subscription</a>
+
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <h4>ID</h4>
+                    </div>
+                    <div class="col-6">
+                        <h5>{{Resource.id}}</h5>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <h4>Brand</h4>
+                    </div>
+                    <div class="col-6">
+                        <h5>{{Resource.Brand.title}}</h5>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <h4>Model</h4>
+                    </div>
+                    <div class="col-6">
+                        <h5>{{Resource.Model.title}}</h5>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <h4>category</h4>
+                    </div>
+                    <div class="col-6">
+                        <h5>{{Resource.Categories.title}}</h5>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <h4>version</h4>
+                    </div>
+                    <div class="col-6">
+                        <h5>{{Resource.title}}</h5>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <h4>Size</h4>
+                    </div>
+                    <div class="col-6">
+                        <h5>{{Resource.size}}</h5>
+                    </div>
+                </div>
+
+
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <h4>Tags</h4>
+                    </div>
+                    
+                    <div class="col-6">
+                        {% for i in Resource.Tags.all %}
+                       <span> {{i}}, </span>
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+
+
+            </div>
+        </div>
+{% endif %}
+
+       
+  
+      </div>
+    </div>
+  </div>
+<div class="limitform">
+    <form action="" method="post">
+        <div class="proClass"><input type="hidden" id="pro" name="pro"></div>
+        <div class="freeClass"><input type="hidden" id="free " name="free"></div>
+        
+    </form>
+</div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    let resourcedata='{{Resource.pro}}'
+    
+    if (resourcedata == true)
+    {
+        console.log("pro file")
+        document.getElementById("pro").vlaue=1;
+    }
+    else{
+        console.log("free file")
+        document.getElementsByClassName ("freeClass").innerHTML=`<input type="hidden" id="free " name="free" value=1>`
+    }
+       
+       
+    const limitjsondata='{{limitjsondata}}'
+    // console.log("resource in download is ")
+    // console.log(limitjsondata)
+    const limitparsedata=JSON.parse(limitjsondata.replace(/&quot;/g, '"'))
+    console.log(limitparsedata)   
+    console.log("before get data is ")
+    let filterdata=[]
+    filterdata= limitparsadata.filter(res=>res['titile'].includes(resourcedata))
+    console.log("get data is ")
+    console.log(filterdata)
+  
+    const limit= ()=>{
+
+        
+    }
+   
+
+
+
+</script> 
+{% endblock %}

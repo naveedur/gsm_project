@@ -1,0 +1,245 @@
+{% extends 'firmApp/basic.html'%}
+{% block css %}
+{% load humanize %}
+{% load extras %}
+{% load social_share %}
+
+
+
+<style>
+  .table_col {
+    border: 2px solid black;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2
+  }
+  .comment{
+    background-color: #373F27;
+    color:white;
+    padding: 3px 5px;
+    border-radius: 5px;
+  }
+  .comment:hover{
+    background-color: #636B46;
+    color: white;
+  }
+.navbar-nav li a{
+  color:white;
+}
+.navbar-nav li a :hover{
+  color:#CDA34F;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+  <div class="row">
+  <div class="col-md-1 col-2 " >
+    <div class="row   fixed-top" style="margin-top:250px;">
+    <!-- <h4>Share <span style="width:20px">&rarr;</span></h4> -->
+  {% post_to_facebook object_or_url "Facebook" %}
+  {% post_to_whatsapp object_or_url "WhatsApp" %}
+</div></div>
+  <div class="col-md-10 col-12">
+    <div class="container-fluid">
+  <div class="row" style="margin-top:-8px">
+
+
+    <nav class="navbar navbar-expand  shadow mb-3" style="background-color: #373F27; ">
+      <div class="container-fluid d-flex justify-content-center align-items-center">
+        <a class="navbar-brand text-white " href="/blogs">Blogs</a>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a href="/recent_articles"  class="nav-link " aria-current="page" href="#">Recently added</a>
+            </li>
+            <li class="nav-item">
+              <a href="/popular_articles"  class="nav-link " aria-current="page" href="#">Popular</a>
+            </li>
+            
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Firmwares
+              </a>
+              <ul class="dropdown-menu" style="background-color: #373F27;" aria-labelledby="navbarDropdown">
+                  {% for i in brands %}
+                <li><a href="/mod/{{i.title}}" class="dropdown-item" href="#">{{i.title}}</a></li>
+
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+</div>
+</div>
+
+<div class="container">
+
+
+
+  <div class="row">
+
+    <div class="col-md-8 col-12">
+      <div class="table-responsive row ">
+        <div style="overflow-x:auto;">
+          <table>
+            {% for i in resources %}
+            {%if forloop.first%}
+            <tr>
+              <th>Version</th>
+              <th>file_size</th>
+              <th>Updated_at</th>
+              <th>downloaded</th>
+              <th>Description</th>
+              <th>Download</th>
+
+            </tr>
+            {% endif %}
+            <tr>
+              <td>{{i.title}} </td>
+              <td>{{i.size}}</td>
+              <td>{{i.update_at}}</td>
+              <td>50</td>
+              <td>{{i.desc}}</td>
+              <td><a href="/download/{{i.title}}" class="btn btn-sm btn-info mt-1">Download</a></td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+ <div class="container">
+
+  <div class="row">
+
+    <div class="col-md-8 col-12">
+      <h3>{{solution.title}}</h3>
+      <p align="justify">{{solution.desc|safe}}</p>
+
+
+    </div>
+  </div>
+
+</div>
+
+<!-- comments coding -->
+  <h3>Comments ({{comments.count}})</h3>
+  {% if user.is_authenticated %}
+  <div class="row">
+    <div class="col-md-6 col-9">
+
+      <form action="/postComment" method="post" class="mb-4">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="exampleInputEmail1">Post Comment </label>
+          <input type="text" class="form-control" name="comment" placeholder="Enter comment here">
+        </div>
+        {%if solution%}
+        <input type="hidden" name="postSno" value="{{solution.sno}}">
+        {%elif Mod%}
+        <input type="hidden" name="modelSno" value="{{Mod.sno}}">
+        {%endif%}
+        <input type="hidden" name="parentSno" value="">
+        <button type="submit" class=" comment mt-2">Comment</button>
+      </form>
+    </div>
+  </div>
+
+
+  {% else %}
+  <h3>please Login to post a comments</h3>
+  {%endif%}
+
+
+  {%for i in comments%}
+  <div class="row ">
+    <div class="col-md-6 col-8">
+      <b>{{i.user.username}}</b> at {{i.timestamp | naturaltime}}</span>
+      <div>{{i.comment}}</div>
+
+      <div class="reply">
+        <p>
+
+          <button class=" comment " type="button" data-bs-toggle="collapse" data-bs-target="#replyBox{{i.sno}}"
+            aria-expanded="false" aria-controls="replyBox{{i.sno}}">
+            reply
+          </button>
+        </p>
+        {% if user.is_authenticated %}
+        <div class="collapse" id="replyBox{{i.sno}}">
+          <div class="card card-body">
+            <form action="/postComment" method="post" class="mb-4">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="comment">Post Reply </label>
+                <input type="text" class="form-control" name="comment" placeholder="Enter reply here">
+
+              </div>
+              <input type="hidden" name="parentSno" value="{{i.sno}}">
+              {%if solution%}
+              <input type="hidden" name="postSno" value="{{solution.sno}}">
+              {%elif Mod%}
+              <input type="hidden" name="modelSno" value="{{Mod.sno}}">
+              {%endif%}
+              <button type="submit" class=" comment mt-2">Reply</button>
+            </form>
+          </div>
+        </div>
+        {% else %}
+        <div class="collapse" id="replyBox{{i.sno}}">
+          <div class="card card-body">
+            Please login to Post a reply
+          </div>
+        </div>  
+              {% endif %}
+        <div class="replies   ">
+          {% for reply in replyDict|get_val:i.sno %}
+          <div class="row" style="margin-left: 30px;">
+             
+              <div class="col-md-11">
+                  <div class="col-md-11 ">
+                      <b> {{reply.user.username}} </b> <span class=" ">{{reply.timestamp| naturaltime}}</span>
+                      <div>{{reply.comment}}</div>
+                  </div>
+                  <br>
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+
+
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+</div>
+</div>
+</div>
+{% endblock %}

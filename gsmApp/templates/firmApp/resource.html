@@ -1,0 +1,153 @@
+{% extends 'firmApp/basic.html'%} {% load static %}
+{% block title %}{{mod.Brand}} | {{mod}} | Firmware's {% endblock %}
+{% block css %}<style>
+  .Second ul {
+    list-style-type: none;
+  }
+
+  .Second li {
+    float: left;
+  }
+
+  .Second li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+    font-size: 120%;
+  }
+
+  .Second li a:hover,
+  a:active {
+    background-color: #7abecc;
+    color: #f8f9fa;
+    text-decoration: underline;
+  }
+
+  .table_col {
+    border: 2px solid black;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2
+  }
+</style> {% endblock %}
+
+
+{% block body %}
+
+<nav class="container" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+
+    {%for i in mod%}
+    {%if forloop.first%}
+    <li class="breadcrumb-item " aria-current="page"><a href="/brand/{{i.Brand.slug}}">{{i.Brand.slug}}</a></li>
+
+    <li class="breadcrumb-item " aria-current="page">{{i.title}}</li>
+    {%endif%}
+    {% endfor %}
+  </ol>
+</nav>
+
+
+<div class="container my-3">
+  <div class="row">
+    <div class="  shadow col-md-8" style="background-color: white; padding: 5%;">
+      <div class=" First row mt-4">
+        <div class=" d-flex justify-content-center col-lg-3 col-md-12 col-sm-12">
+          <img src="{% static 'firmApp/images/sample.jpg'%}" alt="" />
+        </div>
+        <div class="col-lg-9 col-md-12 col-sm-12">
+          <p align="justify">
+            Xiaomi Redmi Note 11 Pro 4G Indian with codename is vida Firmware
+            includes Global Firmware (Global ROM), China Firmware (China ROM),
+            Stable MIUI and Beta MIUI. This is full list of Xiaomi Redmi Note 11
+            Pro 4G Indian. Xiaomi Redmi Note 11 Pro 4G Indian may called with
+            other names like . China ROM, Firmware is for China region, there
+            are only English, Chinese and No Google Services. Global ROM,
+            Firmware is for Global region and almost can flash for China phone
+            with unlocked bootloader. They have multilanguage and Google
+            Services, china apps removed. All file download from MiFirm is Free.
+            Fastboot firmware, ZIP firmware is official from Xiaomi. EU ROM,
+            TWRP and Other files is unofficial. Use at your own risk.
+          </p>
+
+        </div>
+      </div>
+      <hr width="100%" size="10" />
+
+      <div class="row Second" style="    text-align:center;  ">
+
+        <ul align="center">
+          {% for cat in mod %}
+
+          {% for i in cat.Cat.all %}
+
+
+
+          <!-- <li><a href="/resources/{{i.title}}" onclick="myfunction()" id="cat"><a href='javascript:void();'>{{i.title}}</a></a></li> -->
+          <li><a class=" btn btn-small navlink position-relative"
+              href="/catagories/{{cat.title}}/{{i.title}}">{{i.title}}
+              {% for l in Length%} {% if forloop.parentloop.counter == forloop.counter %}{% if l > 0 %} {{l}}{% endif %}
+              {%endif%}
+              {% endfor%}
+
+            </a></li>
+
+          {% endfor %}
+          <li><a class=" btn btn-small navlink position-relative" href="/solutions/{{model_title}}">Solutions
+            </a></li>
+          {% endfor %}
+
+
+          <hr width="100%" size="10" />
+
+        </ul>
+      </div>
+      <div class="table-responsive row third">
+        <div style="overflow-x:auto;">
+          <table>
+            {% for i in resources %}
+            {%if forloop.first%}
+            <tr>
+              <th>Version</th>
+              <th>file_size</th>
+              <th>Updated_at</th>
+              <th>varient</th>
+              <th>Download</th>
+
+            </tr>
+            {% endif %}
+            <tr>
+              <td>{{i.title}} </td>
+              <td>{{i.size}}</td>
+              <td>{{i.update_at}}</td>
+              <td>{{i.varient}}</td>
+              <td><a href="/download/{{i.slug}}" class="btn btn-sm btn-info mt-1">Download</a></td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

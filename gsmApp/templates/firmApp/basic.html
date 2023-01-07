@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% for i in onsite_data %}
+    {% if forloop.first %}
+    <meta name="description" content="{{i.Meta_Description}}" />
+    <meta name="keywords" content="{{i.Meta_Keywords}}" />
+
+    {% endif %}
+    {% endfor %}
+    {% if user.is_superuser %}
+    <meta name="author" content="{{user.username}}" />
+    {% endif %}
+    <title>{% block title %} {% endblock %}</title>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'firmApp/css/accounts.css' %}"
+    />
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+      }
+      ::placeholder {
+        font-weight: bold;
+        font-size: large;
+        color: rgb(71, 69, 69);
+      }
+      .second {
+         background-color: #7abecc; 
+        background-color:#CDA34F;
+        padding-bottom: 3%;
+      }
+      .fa-google {
+        background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+      }
+
+      i.fab{
+        padding: 10px;
+        border-radius: 20px;
+        margin-left:4px;
+        color:#fff;
+      }
+      .fa-facebook{
+        background-color: #0033ff;
+      }
+      .fa-twitter{
+        background-color: #55acee;
+      }
+      .fa-youtube{
+        background-color: #bb0000;
+      }
+      .navbar-brand img {
+      width: 180px;
+      height: 80px;
+    }
+
+    /* .navlist{
+       float: right;
+       padding-left: 60%;
+       
+     } */
+    .auth .btn {
+      background-color: #373F27;
+      color: white;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    .auth .btn:hover {
+      background-color: #74cfbf;
+      background: #636B46;
+      color: white;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    .link {
+      color: white;
+    }
+
+    .first {
+      background-color: #7abecc;
+      background-color: #CDA34F;
+
+    }
+
+    .dropdown-menu {
+      background-color: #373F27;
+      color: white;
+      margin-top: 200px
+    }
+    .dropdown-menu li a{
+      color: white;
+    }
+    .dropdown-menu li a:hover{
+      color: white;
+      background-color: #636B46;
+    }
+    </style>
+    {% block css %} {% endblock %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/fontawesome.min.css"> 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body style="background-color: #f8f9fa">
+    <div class="container-fluid first">
+
+      <nav class="navbar sticky-top navbar-expand-md">
+        <div class="container-fluid">
+  
+  
+          <a class="navbar-brand link " href="/"><img src="{% static 'firmApp/images/logo.png' %}" alt="My image"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="navlist collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="  navbar-nav me-auto mb-2 mb-lg-0 ">
+              <li class="nav-item">
+                <a class="nav-link active link" aria-current="page" href="/blogs">BLOG</a>
+              </li>
+              <li class="nav-item">
+                <!-- <a class="nav-link active" aria-current="page" href="/register">Register</a> -->
+              </li>
+            </ul>
+            <form class="d-flex auth" role="search">
+
+             
+                <a href="{{i.Facebook_URL}}"><i class="fab fa-facebook fa-1x"></i></a>
+                <a href="{{i.Twitter_URL}}"><i class="fab fa-twitter fa-1x"></i></a>
+                <a href="{{i.Youtube_URL}}"><i class="fab fa-youtube fa-1x"></i></a>
+             
+                
+              {% if user.is_superuser %}
+              <button class="btn"> <a href="http://127.0.0.1:8000/admin/" class="nav-link active link"
+                  aria-current="page">Dashboard</a></button>
+              {% endif %}
+              <div class="btn-group dropstart">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Account </button>
+                <ul class="dropdown-menu drop " style="background-color: #373F27; color:white">
+                  {% if user.is_authenticated %}
+                  <li><a  class="  dropdown-item" href="/userProfile">Dashboard</a></li>
+                  <li><a href="{% url 'logout' %}" class="dropdown-item" aria-current="page"
+                        href="/register">logout</a></li>
+                  {% else %}
+                  <li>
+                    <a class="dropdown-item" aria-current="page" href="/login">Login</a>
+                   
+                  </li>
+                  <li>
+                    <a class="dropdown-item" aria-current="page"
+                        href="/register">Register</a>
+                  </li>
+                  {% endif%}
+                </ul>
+              </div>
+  
+            </form>
+          </div>
+        </div>
+      </nav>
+  
+      
+    </div>
+    <div class="container-fluid">
+      <div class="row second d-flex justify-content-center align-items-center mb-2">
+        <div class="col-10 col-md-4 mb-2">
+          <div >
+          <form id="form_id" action=" " method="post"></div>
+            {%csrf_token%}
+            <input
+              type="text"
+              list="check"
+              autocomplete="off"
+              name="search"
+              id="filesearch"
+              class="form-control"
+              placeholder="Search for Model"
+              aria-label="Search for models"
+              aria-describedby="basic-addon1"
+            />
+            <datalist id="check">
+              {% for i in resourceList%}
+              <option value="{{i.Model.title}} | {{i.Model.Model_code}} | {{i.varient}}"></option>
+              {% endfor %}
+            </datalist>
+            <input type="button" value="submit">
+          </form>
+        </div>
+        <div class="col-md-8 float-right">
+          <img src="{% static 'firmApp/images/banner.jpg' %}" class="img-fluid" style="float: right;" alt="My image">  
+        </div>
+       
+
+      
+    </div></div>
+     {% block body %} {% endblock%}
+    {% include 'firmApp/footer.html'%}
+
+    <script type="text/javascript">
+      (function titleMarquee() {
+        document.title =
+          document.title.substring(1) + document.title.substring(0, 1);
+        setTimeout(titleMarquee, 200);
+      })();
+    const jsdata='{{resourcejsondata}}'
+    const pdata=JSON.parse(jsdata.replace(/&quot;/g, '"')) 
+    console.log(pdata)
+    let inputvalue=document.getElementById("filesearch");
+    inputvalue.addEventListener("keyup", (e)=>{
+      searchvalue=e.target.value
+      console.log(searchvalue)
+      splitvalue=searchvalue.split(" |")
+      console.log(splitvalue[0])
+      let filevalue=splitvalue[0]
+      let slugvalue=filevalue.split(" ").join('-')
+      document.getElementById('form_id').action = `/model/${slugvalue}/`;
+      // form_id.innerHTML=""
+      // form_id.innerHTML+=`<form  action=" /download/file2/" method="post"></div>`
+     
+
+      
+
+    })
+
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+      crossorigin="anonymous"
+    ></script>
+
+    {% block javascript %} {% endblock %}
+  </body>
+</html>

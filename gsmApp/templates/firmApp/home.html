@@ -1,0 +1,216 @@
+{% extends 'firmApp/basic.html'%}
+
+{% load static %}
+{% block title %}Multi Brand |Firmware's Catalogue {% endblock %}
+{%block css %}
+<style>
+    body html {
+        background-color: #568bc0;
+    }
+
+    .text {
+        width: 100%;
+        height: 300px;
+        border: 1px solid black;
+        overflow: auto;
+        font-size: large;
+    }
+
+    ::placeholder {
+        font-weight: bold;
+        font-size: large;
+        color: rgb(71, 69, 69)
+    }
+
+    .facebookfan {
+        background-color: #0033ff;
+        color: white;
+
+    }
+
+    .like {
+        height: 100px;
+        padding: 5px;
+        background-image: url("{%static 'firmApp/images/fanpage1.jpg'%}");
+        background-repeat: no-repeat;
+        background-size: 280px;
+        opacity: 0.9;
+
+    }
+</style>
+{% endblock %}
+{% block body %}
+
+<div class="container  my-3 ">
+    <div class="row">
+        <div class=" text col-md-9 shadow bg-white">
+            <p align="justify">Download Xiaomi Firmware - MIUI Download - Mi ROM - Free and fastest download
+                MiFirm was created from August 2018 to make a FREE, BIGGEST and BEST speed download
+                for everyone want to download MIUI Xiaomi firmware & MIUI ROM. We have now 485
+                Xiaomi models on server. We checking everyday for new firmware release. And we
+                also now have 6943 total fastboot firmwares, 10303 total zip ROM, 8268 total
+                eu ROM in server. We served 6674174 downloads from 22700 users and other guests
+                in world wide.
+
+                Download Xiaomi Firmware - MIUI Download - Mi ROM - Free and fastest download
+                Our website comes as an ultimate firmware & ROM database. The key reasons to opt for MiFirm.net are as
+                follows:
+                <span id="dots">...</span><span style="display: none;" id="more">
+                    Easy download MIUI firmware
+                    Free to download firmware max speed link
+                    A detailed list of firmware & ROM with models and type.
+                    100% secure downloading process.
+                    Official/Unofficial Xiaomi firmware & ROM MIUI download.
+                    Xiaomi Firmware & ROM Download Tips
+
+                    To make your Xiaomi device run with no errors and avoid misbehaving, you need to make sure you have
+                    downloaded the correct firmware & ROM that meets exactly your model.
+
+                    Option 1 – Check device model in normal mode
+
+                    You can check exact model name in Setting -> About -> Software information
+
+                    Option 2 – Check device model code in fastboot mode
+
+                    In fastboot mode, connect to PC, run the Fastboot command fastboot getvar product.</span>
+            </p>
+            <button class="btn btn-info" onclick="myFunction()" id="myBtn">Read more</button>
+
+        </div>
+        <div class="col-md-3">
+            <div class="facebookfan col-12 mt-2">
+                <h5><i class="fab fa-facebook fa-1x"></i>Fanpage</h5>
+            </div>
+            <div class="like ">
+                <div class="row d-flex justify-content-center">
+
+                    <div class="col-md-4 col-4 logo mt-3  "><img src="{% static 'firmApp/images/logo.png' %}"
+                            class="img-fluid" style="background-color: white; padding: 8px;" alt="My image"></div>
+                    <div class="col-md-8 col-8 ">
+                        <p style="color:white;"><b>Gsminifity.com</b></p>
+                     
+                        <p><iframe
+                                src="https://www.facebook.com/plugins/like.php?href={{i.Facebook_URL}}%&width=62&layout=box_count&action=like&size=small&share=false&height=65&appId=441037567571945"
+                                width="62" height="65" style="border:none;overflow:hidden" scrolling="no"
+                                frameborder="0" allowfullscreen="true"
+                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 
+<form action="">
+    <input type="text" list="checklist">
+    <datalist id="checklist">
+        {% for i in Mod %}
+        <option value="{{i.title}}"></option>
+{% endfor %}    </datalist>
+</form> -->
+
+
+<!-- searchbar -->
+
+<!-- <div class="container">
+    <div class="row my-3">
+        <div class="col-md-9 py-2" style=" text-align:center; ">
+            <form >
+                <div class="row my-2">
+                    <div class="col-md-12">
+                        <a href='javascript:void();'>   <input type="text" id="box"  onkeyup="searchfunction()" name="Search" placeholder="Enter file name" style=" border:2px solid black; width:100%; float:left; height: 170%; padding-left: 2%;"></a>
+                    </div>
+                    <div class="col-md-2">
+                       <button  type="submit" style="float:right;">search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div> -->
+<!-- folders -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 shadow bg-white">
+            <div class="row my-3">
+                <form>
+                    <div class="row my-2">
+                        <div class="col-md-12">
+                            <input type="text" id="box" name="Search" autocomplete="off" class="form-control"
+                                placeholder="Search for Brand"
+                                style=" border:2px solid black; width:100%; float:left; height: 170%; padding-left: 2%;">
+                        </div>
+                        <div class="col-md-2">
+                            <!-- <button  class="btn auth" type="submit" style="float:right;"></button> -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row  mt-3" id="list">
+                {% for i in brands %}
+                <div class="col-md-2 col-6 mt-3 ">
+                    <div>
+                        <a href="/brand/{{i.slug}}"> <img src="{% static 'firmApp/images/sample.jpg'%}"
+                                class="img-fluid" alt="Card image cap"></a>
+                    </div>
+                    <a href="/brand/{{i.slug}}" class="btn">{{i.title}}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+
+    function myFunction() {
+        var dots = document.getElementById("dots");
+        var moreText = document.getElementById("more");
+        var btnText = document.getElementById("myBtn");
+
+        if (dots.style.display === "none") {
+            dots.style.display = "inline";
+            btnText.innerHTML = "Read more";
+            moreText.style.display = "none";
+        } else {
+            dots.style.display = "none";
+            btnText.innerHTML = "Read less";
+            moreText.style.display = "inline";
+        }
+    }
+
+
+    //   const data='{{qs_query}}'
+    const data = '{{jsondata}}'
+    console.log(data)
+    const rdata = JSON.parse(data.replace(/&quot;/g, '"'))
+    console.log(rdata)
+    const input = document.getElementById("box")
+    let filterarr = []
+
+    input.addEventListener("keyup", (e) => {
+        list.innerHTML = ""
+        filterarr = rdata.filter(brand => brand['title'].includes(e.target.value))
+        console.log(filterarr)
+        if (filterarr.length > 0) {
+            filterarr.map(brand => {
+                list.innerHTML += `<div class="col-md-3">
+                                <a href="/brand/${brand["slug"]}"> <img  style="width: 70%;" src='/media/${brand["image"]}' alt="Card image cap"></a>
+                                <a href="/brand/${brand["slug"]}" class="btn">${brand["title"]}</a>
+                             </div>`
+            })
+        } else {
+            list.innerHTML = "Brand Not available"
+        }
+    })
+
+
+</script>
+{% endblock %}

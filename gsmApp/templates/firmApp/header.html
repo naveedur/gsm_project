@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+
+  <style>
+    .navbar-brand img {
+      width: 180px;
+      height: 80px;
+    }
+
+    /* .navlist{
+       float: right;
+       padding-left: 60%;
+       
+     } */
+    .auth .btn {
+      background-color: #f8f9fa;
+      background-color: #373F27;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    .auth .btn:hover {
+      background-color: #74cfbf;
+      background: #636B46;
+      color: white;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    .link {
+      color: white;
+    }
+
+    .first {
+      background-color: #7abecc;
+      background-color: #CDA34F;
+
+    }
+
+    .dropdown-menu {
+      background-color: #373F27;
+      color: white;
+      margin-right: 20px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid first">
+
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+
+
+        <a class="navbar-brand link " href="/"><img src="{% static 'firmApp/images/logo.png' %}" alt="My image"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navlist collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="  navbar-nav me-auto mb-2 mb-lg-0 ">
+            <li class="nav-item">
+              <a class="nav-link active link" aria-current="page" href="/blogs">BLOG</a>
+            </li>
+            <li class="nav-item">
+              <!-- <a class="nav-link active" aria-current="page" href="/register">Register</a> -->
+            </li>
+          </ul>
+          <form class="d-flex auth" role="search">
+
+            <a href=""><i class="fab fa-facebook fa-1x"></i></a>
+              <a href=""><i class="fab fa-twitter fa-1x"></i></a>
+              <a href=""><i class="fab fa-youtube fa-1x"></i></a>
+
+              
+            {% if user.is_superuser %}
+            <button class="btn"> <a href="http://127.0.0.1:8000/admin/" class="nav-link active link"
+                aria-current="page">Dashboard</a></button>
+            {% endif %}
+            <div class="btn-group dropstart">
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Account </button>
+              <ul class="dropdown-menu ">
+                {% if user.is_authenticated %}
+                <li><a style="color: white;" class="dropdown-item" href="/userProfile">Dashboard</a></li>
+                <li><button class="btn"> <a href="{% url 'logout' %}" class="nav-link active link" aria-current="page"
+                      href="/register">logout</a></button></li>
+                {% else %}
+                <li>
+                  <buton class="btn"><a class="nav-link active  link " aria-current="page" href="/login">Login</a>
+                  </buton>
+                </li>
+                <li>
+                  <buton class="btn"> <a class="nav-link active mx-1 link" aria-current="page"
+                      href="/register">Register</a></buton>
+                </li>
+                {% endif%}
+              </ul>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </nav>
+
+
+  </div>
+
+</body>
+
+</html>

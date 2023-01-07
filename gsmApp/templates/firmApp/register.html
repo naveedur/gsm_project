@@ -1,0 +1,70 @@
+{% extends 'firmApp/basic.html'%}
+
+{% load socialaccount %}
+{% providers_media_js %}
+
+{% block title %}sgnup {% endblock %}
+
+
+	{% block css %}
+	<style>
+
+
+	</style>
+	{% endblock %}
+	{% block body %}
+
+	<div class="container mt-3">
+
+		<div class="row d-flex justify-content-center">
+			<div class="col-md-4 col-9 ">
+				<h2 align='center'>Create Your Account</h2>
+				<form action="{% provider_login_url 'google' %}" method="post" class="cursor-pointer mb-2 ">
+					{% csrf_token %}
+					<button type="submit" class="d-flex justify-content-center"
+						style="background-color: white; width:100%; height: 45px; border-radius: 5px; align-items: center;"><i
+							class="fab fa-google fa-2x "></i>
+						&nbsp&nbsp Login with Google </button>
+				</form>
+
+				<form method="post" , action=""> {% csrf_token %}
+
+					<div class="mb-3">
+						<label for="username" class="form-label">Username</label>
+						{{form.username}}
+					</div>
+					<div class="mb-3">
+						<label for="email" class="form-label">Email address</label>
+						{{form.email}}
+					</div>
+					<div class="mb-3">
+						<label for="password" class="form-label">Password</label>
+						{{form.password1}}
+					</div>
+					<div class="mb-3">
+						<label for="passwordconfirm" class="form-label">Confirm_Password</label>
+						{{form.password2}}
+					</div>
+
+					<div class="g-recaptcha " data-sitekey="6Lc678UgAAAAAOnD9Q91mmYXoAGdOX2kPIWf_18u"></div>
+
+					<div class="d-grid gap-2">
+					<button type="submit" class="btn btn-success mt-2">Submit</button>
+					</div>
+					<div class="d-flex justify-content-center links">
+						Already have an account? <a style="text-decoration: none;" href="{% url 'login' %}" class="ml-2">Login</a>
+					</div>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		var form_fields = document.getElementsByTagName('input')
+		for (var field in form_fields) {
+			form_fields[field].className += ' form-control'
+		}
+	</script>
+	{% endblock %}

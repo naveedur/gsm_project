@@ -1,0 +1,48 @@
+{% extends 'firmApp/basic.html'%}
+
+{% load socialaccount %}
+{% providers_media_js %}
+
+{% block title %}login {% endblock %}
+
+{% block body %}
+
+
+<div class="container mt-3">
+
+	<div class="row d-flex justify-content-center">
+		<div class="col-md-4 col-9 ">
+			<h2>Login to Your Account</h2>
+			<form action="{% provider_login_url 'google' %}" method="post" class="cursor-pointer mb-2 ">
+				{% csrf_token %}
+				<button type="submit" class="d-flex justify-content-center"
+					style="background-color: white; width:100%; height: 45px; border-radius: 5px; align-items: center;"><i
+						class="fab fa-google fa-2x "></i>
+					&nbsp&nbsp Login with Google </button>
+			</form>
+
+			<form method="post" , action=""> {% csrf_token %}
+
+				<div class="mb-3">
+					<label for="username" class="form-label">Email address</label>
+					<input type="text" class="form-control" name="username">
+				</div>
+				<div class="mb-3">
+					<label for="password" class="form-label">Password</label>
+					<input type="password" class="form-control" name="password">
+				</div>
+
+				<div class="g-recaptcha " data-sitekey="6Lc678UgAAAAAOnD9Q91mmYXoAGdOX2kPIWf_18u"></div>
+
+
+				<button type="submit" class="btn btn-success mt-2" >Submit</button>&nbsp&nbsp&nbsp&nbsp <a class="m-4"
+					href="{% url 'reset_password'%}" style="text-decoration: none">Forget Password?</a>
+			</form>
+		</div>
+	</div>
+	
+</div>
+
+</div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}

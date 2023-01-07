@@ -1,0 +1,12 @@
+{% extends 'firmApp/basic.html' %}
+
+{% block body%}
+<h1>this is social form</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    
+    <input type="password" placeholder="set password" name="password" >
+    <button type="submit"> submit</button>
+</form>
+
+{% endblock %}

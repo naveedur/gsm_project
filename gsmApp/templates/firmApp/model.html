@@ -1,0 +1,88 @@
+{% extends 'firmApp/basic.html'%} {% load static %}
+{% block title %}{{brand_title}} |Firware's {% endblock %}
+{%block css %}
+
+<style>
+  
+  .model{
+    text-align: center;
+  }
+  .model a{
+    text-decoration: none;
+    
+    color:black;
+  }
+  .category ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .category li {
+    float: left;
+    margin-right: 8px;
+  }
+  .category li a{
+    text-decoration: none;
+    background-color: #CDA34F;
+    color:black;
+    padding: 2px 4px;
+  }
+</style>
+{% endblock %} {% block body %}
+<nav class="container" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{brand_slug}}</li>
+  </ol>
+</nav>
+
+<hr width="100%" size="10" />
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        {% for i in models %}
+        <div class="col-md-3 model">
+          <div class="row">
+          <a href="/model/{{i.slug}}">
+            <img
+              style="width: 160px; height: 212px"
+              src="/media/{{i.image}}"
+              alt="Card image cap"
+          /></a>
+        </div>
+        <div class="row">
+          <a href="/model/{{i.slug}}">{{i.title}}</a><br>
+        </div>
+        <div class="row ">
+          {% if i.Model_code %}
+          <a href="/model/{{i.slug}}"> ({{i.Model_code}})</a>
+          {% endif %}</div>
+        
+        <div class="row category ">
+          {% if i.Cat %}
+          <ul align="center">
+          {% for j in i.Cat.all%}
+
+          <li><a class="   " href="/model/{{i.slug}}">{{j.title}}
+            
+          </a></li>
+          {% endfor %}
+        </ul>
+          {% endif %}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+</form>
+
+{% endblock %}

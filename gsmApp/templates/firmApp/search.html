@@ -1,0 +1,40 @@
+{% extends 'firmApp/basic.html'%} {% load static %} {%block css %}
+
+<style>
+  .model{
+    text-align: center;
+  }
+  .model a{
+    text-decoration: none;
+    
+    color:black;
+  }
+  
+</style>
+{% endblock %} {% block body %}
+
+<hr width="100%" size="10" />
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        {% for i in models %}
+        <div class="col-md-3 model">
+          <a href="/model/{{i.slug}}">
+            <img
+              style="width: 160px; height: 212px"
+              src="/media/{{i.image}}"
+              alt="Card image cap"
+          /></a>
+          <a href="/model/{{i.slug}}/">{{i.title}}</a><br>
+          {% if i.code %}
+          <a href="/model/{{i.slug}}/"> ({{i.code}})</a>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

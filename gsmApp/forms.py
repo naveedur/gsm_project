@@ -34,10 +34,30 @@ class CreateUserForm(UserCreationForm):
 
 
 
+
 class UpdateUserForm(forms.ModelForm):
     class Meta:
         model=User
-        fields=['username','email']      
+        fields=['username','email']    
+
+
+from django import forms
+from taggit.managers import TaggableManager
+from .models import resource
+
+class ResourceForm(forms.ModelForm):
+    class Meta:
+        model = resource
+        fields = ['title', 'Brand', 'Model', 'Categories']
+        
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        tags = [instance.title, instance.Brand.title, instance.Model.title, instance.Categories.title]
+        instance.Tags.set(*tags, clear=True)
+        if commit:
+            instance.save()
+        return instance
+
 
 
       

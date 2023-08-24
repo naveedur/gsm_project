@@ -1,0 +1,112 @@
+{% extends 'firmApp/basic.html'%}
+
+{% load static %}
+{%block css %}
+<style>
+  * {
+  margin: 0;
+  padding: 0;
+}
+.userReferrralCode{
+  background-color:white;
+  box-shadow: 1px 32px 23px -1px rgba(108,117,86,0.56);
+-webkit-box-shadow: 1px 32px 23px -1px rgba(108,117,86,0.56);
+-moz-box-shadow: 1px 32px 23px -1px rgba(108,117,86,0.56);
+  margin:0;
+  padding: 15px 50px;
+  font-size: large;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.subscription{
+  border: 2px solid rgb(230, 228, 228);
+  background-color: white;
+  height: 50vh;
+  align-items: center;
+ 
+  margin: 0;
+}
+.subscription .wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  
+}
+.heading{
+  background-color: #373F27;
+  width: 100%;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+.subscription .wrapper div{
+  
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+.subscription-fields{
+  font-size: large;
+  font-weight: 500;
+  margin-right: 5px;
+}
+.expire{
+  height: 40vh;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+</style>
+{% endblock %}
+{% block body %}
+
+<div class="row">
+  <div class="col-md-2 col-3">
+    {% include "userDashboard/basic.html" %}
+  </div>
+<div class="col-md-10  col-9 user-data ">
+ <div class="userReferrralCode row">
+  <div class="col-md-4 col-12 ">Refferal code: {{userProfile.referral_code}}   </div>
+  <div class="col-md-4 col-12">Referrer code: {{userProfile.referrer_code}}</div>
+  <div class="col-md-4 col-12">credits: {{userProfile.credits}}</div>
+ </div>
+
+ <div class=" mt-5 ">
+  <div class="col-md-4 col-11 subscription">
+    
+
+    <div class="wrapper">
+  {% if subscription and subscription.is_active%}
+  <h4 class="heading">your subscription</h4>
+  <div><span class="subscription-fields">subscription Duration:  </span>   {{subscription.subscription_type}}</div>
+  <div><span class="subscription-fields">You can download:</span>{{subscription.subscription_type.Files_to_download}} files</div>
+  <div> <span class="subscription-fields">You can download:</span>  {{subscription.subscription_type.Data_to_download}} GB Data</div>
+  <div><span class="subscription-fields">start Date: </span>{{subscription.start_date}}</div>
+  <div> <span class="subscription-fields">expire Date:</span> {{subscription.expire_date}}</div>
+  {% elif subscription and not subscription.is_active %}
+  <h4 class="heading">your subscription has expired</h4>
+  <div class="expire">
+    <span class="subscription-fields mb-4">Your subscription has expired on {{subscription.expire_date}}</span>
+    <a href="{% url 'subscription' %}" class="btn btn-primary subscribe"
+                        style="background: #373F27; border: none; margin-bottom: 15px;">Subscription</a>
+  </div>
+  {%else%}
+  <h4 class="heading">you did not buy subscription</h4>
+  <div class="expire">
+    <span class="subscription-fields mb-4">Do you want to buy Subscription</span>
+    <a href="{% url 'subscription' %}" class="btn btn-primary subscribe"
+                        style="background: #373F27; border: none; margin-bottom: 15px;">Subscription</a>
+  </div>
+  {%endif%}
+</div>
+</div>
+ </div>
+</div>
+</div>
+{% endblock %}
+
+ 

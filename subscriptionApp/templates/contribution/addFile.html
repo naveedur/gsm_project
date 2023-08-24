@@ -1,0 +1,78 @@
+{% extends 'firmApp/basic.html'%}{% load static %}
+{% block title %}about us {% endblock %}
+{% block css %}<style>
+    .mb-3{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .mb-3 input, .mb-3 select{
+        height: 40px;
+        width: 100%
+    }
+    .mb-3 input,.mb-3 textarea,.mb-3 select{
+        border: 2px solid rgb(224, 224, 224);
+        border-radius: 0.375rem;
+        padding-left: 10px;        
+    }
+    .form-label{
+        font-weight: bold;
+    }
+
+  
+</style>{% endblock %}
+{% block body %}
+
+
+
+   <div class="container mt-3 mb-3">
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8 col-9 ">
+            <h2 align='center'>post a file</h2>
+            <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+              
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title:</label>
+                    {{form.title}}
+                </div>
+                <div class="mb-3">
+                  <label for="size" class="form-label">Size:</label>
+                  {{form.size}}
+              </div>
+                <div class="mb-3">
+                    <label for="desc" class="form-label">Description:</label>
+                    {{form.desc}}
+                </div>
+                <div class="mb-3">
+                    <label for="file" class="form-label">File:</label>
+                    {{form.file}}
+                </div>
+                <div class="mb-3">
+                  <label for="varient" class="form-label">Varient:</label>
+                  {{form.varient}}
+              </div>
+              <div class="mb-3">
+                <label for="Brand" class="form-label">Brand:</label>
+                {{form.Brand}}
+            </div>
+              <div class="mb-3">
+                <label for="model" class="form-label">Model:</label>
+                {{form.Model}}
+            </div>
+            <div class="mb-3">
+              <label for="Categories" class="form-label">Category:</label>
+              {{form.Categories}}
+          </div>
+                
+
+                <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success mt-2">Submit</button>
+                </div>
+              
+            
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

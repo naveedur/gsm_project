@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label for="id_title" class="col-sm-2 control-label">Title</label>
+          <div class="col-sm-10">
+            <input type="text" name="title" class="form-control" id="id_title" placeholder="Enter title">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="id_Model_code" class="col-sm-2 control-label">Model Code</label>
+          <div class="col-sm-10">
+            <input type="text" name="Model_code" class="form-control" id="id_Model_code" placeholder="Enter model code">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="id_Chipset" class="col-sm-2 control-label">Chipset</label>
+          <div class="col-sm-10">
+            <input type="text" name="Chipset" class="form-control" id="id_Chipset" placeholder="Enter chipset">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="id_chipset_description" class="col-sm-2 control-label">Chipset Description</label>
+          <div class="col-sm-10">
+            <input type="text" name="chipset_description" class="form-control" id="id_chipset_description" placeholder="Enter chipset description">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="id_Brand" class="col-sm-2 control-label">Brand</label>
+          <div class="col-sm-10">
+            <div class="input-group">
+              <select name="Brand" class="form-control" id="id_Brand">
+                {% for brand in brands %}
+                  <option value="{{ brand.id }}">{{ brand.name }}</option>
+                {% endfor %}
+              </select>
+              <div class="input-group-append">
+                <a href="{% url 'create_brand' %}" class="btn btn-outline-secondary" target="_blank">
+                  <i class="fa fa-plus"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="id_Cat" class="col-sm-2 control-label">Category</label>
+          <div class="col-sm-10">
+            <div class="input-group">
+              <select name="Cat" class="form-control" id="id_Cat" multiple>
+                {% for category in categories %}
+                  <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+              </select>
+              <div class="input-group-append">
+                <a href="{% url 'create_category' %}" class="btn btn-outline-secondary" target="_blank">
+                  <i class="fa fa-plus"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+        
+      </form>
+      
+</body>
+</html>

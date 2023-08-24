@@ -1,11 +1,14 @@
 from django.contrib import admin
 from.models import *
-from django_summernote.admin import SummernoteModelAdmin
 from import_export.admin import ImportExportModelAdmin, ExportActionMixin
 
 from import_export.widgets import ForeignKeyWidget,ManyToManyWidget
 from import_export import resources,fields
-from import_export.fields import Field
+from django_summernote.admin import SummernoteModelAdmin
+
+
+
+
 
 def chec(self,instance):
     check=[]
@@ -39,13 +42,16 @@ class brandResource(resources.ModelResource):
     
 class brandAdmin(ImportExportModelAdmin):
     resource_class = brandResource
-    list_display=['id','title']
-    search_fields = ['title',]
+    list_display=("id","title")
+    search_fields = ("title","id")
+    list_display_links=("title","id")
+    
 admin.site.register(brand,brandAdmin)
 
       
 # models
 class modelResource(resources.ModelResource):
+    
     def skip_row(self, instance, original):
         check=[]
         new=model.objects.all()
@@ -71,20 +77,28 @@ class modelResource(resources.ModelResource):
 
 class modelAdmin(ImportExportModelAdmin):
     resource_class = modelResource
-    list_display=['sno','title','Model_code','Chipset','chipset_description','Brand','categories']
-    search_fields = ['title','Model_code','Chipset',]
+    # raw_id_fields = ['Cat']
+    
+    search_fields = ('title','Model_code','Chipset','Cat__title')
+    list_display=('sno','title','Model_code','Chipset','chipset_description','Brand','categories')
+   
+    list_display_links=("title","sno")
+    # list_editable=('t'Model_code','Chipset','Cat__title')
+    
     fields=('title','Model_code','Chipset','chipset_description','image','Brand','Cat','slug')
 admin.site.register(model,modelAdmin)
 
 
 # resourceFile
 class fileResource(resources.ModelResource):
-    def skip_row(self, instance, original):    
-        check=[]
-        new=resource.objects.all()
-        for p in new:
-            check.append(p.title)
-        if instance.title in check:
+
+    def save_model(self, request, obj, form, change):
+        obj.save() # Call the save() method of the resource model
+        super().save_model(request, obj, form, change)
+    def skip_row(self, instance, original, row, index):
+        title = instance.title
+        existing_instances = resource.objects.filter(title=title)
+        if existing_instances.exists():
             return True
         else:
             return False
@@ -106,32 +120,57 @@ class fileResource(resources.ModelResource):
 
     class Meta:
         model = resource
-        fields=('id','title','size','Brand','Model','Categories','file','Tags')
+        fields=('id','title','size','Brand','Model','Categories','file','varient')
 
 class resourceAdmin(ImportExportModelAdmin):
-    list_display=('id','title',)
+    
     resource_class = fileResource
+    list_display=('id','title','Brand','Model','varient')
+    list_display_links=('id','title')
+    list_per_page=15
+    ordering=('-id',)
 admin.site.register(resource,resourceAdmin)         
 
-admin.site.register(user_profile)
-admin.site.register(category)
-admin.site.register(BlogComment)
+# user Profile
+class profileAdmin(admin.ModelAdmin):
+    list_display=('id','name','phoneNomber','referral_code','credits')
+    list_display_links=('name','id','phoneNomber')
+admin.site.register(user_profile,profileAdmin)
+
+# category
+class categoryAdmin(admin.ModelAdmin):
+    list_display=('id','title')
+    list_display_links=('id','title')
+admin.site.register(category,categoryAdmin)
 admin.site.register(ads)
+
+
 admin.site.register(socialLinks)
 admin.site.register(onsitedata)
-admin.site.register(pages)
-admin.site.register(subscription)
-admin.site.register(pro_Members)
+
+class pageAdmin(SummernoteModelAdmin):
+    summernote_fields=('description')
+    
+admin.site.register(pages,pageAdmin)
+
+class customPageAdmin(SummernoteModelAdmin):
+    summernote_fields=('description')
+admin.site.register(custom_page,customPageAdmin)
+
 # admin.site.register(MyCustomTag)
 
 
 
-class articleAdmin(SummernoteModelAdmin):
-    summernote_fields = ('desc',)
-    list_display = ("sno","title" )
-admin.site.register(article,articleAdmin)
+# class articleAdmin(SummernoteModelAdmin):
+#     summernote_fields = ('desc',)
+#     list_display = ("sno","title" )
+# admin.site.register(article,articleAdmin)
 
 
 class PersonAdmin(admin.ModelAdmin):
     list_display = ("title","size","Brand", "Model", "Categories","Tag" )
+    
 
+admin.site.register(notification)
+
+admin.site.ordering = ['category', 'brand', 'model','category']

@@ -15,6 +15,10 @@
         overflow: auto;
         font-size: large;
     }
+    .text p{
+        padding:10px
+    }
+  
 
     ::placeholder {
         font-weight: bold;
@@ -40,42 +44,67 @@
 </style>
 {% endblock %}
 {% block body %}
-
 <div class="container  my-3 ">
     <div class="row">
-        <div class=" text col-md-9 shadow bg-white">
-            <p align="justify">Download Xiaomi Firmware - MIUI Download - Mi ROM - Free and fastest download
-                MiFirm was created from August 2018 to make a FREE, BIGGEST and BEST speed download
-                for everyone want to download MIUI Xiaomi firmware & MIUI ROM. We have now 485
-                Xiaomi models on server. We checking everyday for new firmware release. And we
-                also now have 6943 total fastboot firmwares, 10303 total zip ROM, 8268 total
-                eu ROM in server. We served 6674174 downloads from 22700 users and other guests
-                in world wide.
-
-                Download Xiaomi Firmware - MIUI Download - Mi ROM - Free and fastest download
-                Our website comes as an ultimate firmware & ROM database. The key reasons to opt for MiFirm.net are as
-                follows:
-                <span id="dots">...</span><span style="display: none;" id="more">
-                    Easy download MIUI firmware
-                    Free to download firmware max speed link
-                    A detailed list of firmware & ROM with models and type.
-                    100% secure downloading process.
-                    Official/Unofficial Xiaomi firmware & ROM MIUI download.
-                    Xiaomi Firmware & ROM Download Tips
-
-                    To make your Xiaomi device run with no errors and avoid misbehaving, you need to make sure you have
-                    downloaded the correct firmware & ROM that meets exactly your model.
-
-                    Option 1 – Check device model in normal mode
-
-                    You can check exact model name in Setting -> About -> Software information
-
-                    Option 2 – Check device model code in fastboot mode
-
-                    In fastboot mode, connect to PC, run the Fastboot command fastboot getvar product.</span>
-            </p>
-            <button class="btn btn-info" onclick="myFunction()" id="myBtn">Read more</button>
-
+        <div class="  col-md-9  bg-white">
+            <div class="text ">
+                <p align="justify">Download Xiaomi Firmware - MIUI Download - Mi ROM - Free and fastest download
+                    MiFirm was created from August 2018 to make a FREE, BIGGEST and BEST speed download
+                    for everyone want to download MIUI Xiaomi firmware & MIUI ROM. We have now 485
+                    Xiaomi models on server. We checking everyday for new firmware release. And we
+                    also now have 6943 total fastboot firmwares, 10303 total zip ROM, 8268 total
+                    eu ROM in server. We served 6674174 downloads from 22700 users and other guests
+                    in world wide.
+    
+                    Download Xiaomi Firmware - MIUI Download - Mi ROM - Free and fastest download
+                    Our website comes as an ultimate firmware & ROM database. The key reasons to opt for MiFirm.net are as
+                    follows:
+                    <span id="dots">...</span><span style="display: none;" id="more">
+                        Easy download MIUI firmware
+                        Free to download firmware max speed link
+                        A detailed list of firmware & ROM with models and type.
+                        100% secure downloading process.
+                        Official/Unofficial Xiaomi firmware & ROM MIUI download.
+                        Xiaomi Firmware & ROM Download Tips
+    
+                        To make your Xiaomi device run with no errors and avoid misbehaving, you need to make sure you have
+                        downloaded the correct firmware & ROM that meets exactly your model.
+    
+                        Option 1 – Check device model in normal mode
+    
+                        You can check exact model name in Setting -> About -> Software information
+    
+                        Option 2 – Check device model code in fastboot mode
+    
+                        In fastboot mode, connect to PC, run the Fastboot command fastboot getvar product.</span>
+                </p>
+                <button class="btn btn-info" onclick="myFunction()" id="myBtn">Read more</button>
+            </div>
+            <div class="  brandWrapper">
+            <div class="row my-3">
+                <form>
+                    <div class="row my-2">
+                        <div class="col-md-12">
+                            <input type="text" id="box" name="Search" autocomplete="off" class="form-control"
+                                placeholder="Search for Brand"
+                                style=" border:2px solid black; width:100%; float:left; height: 170%; padding-left: 2%;">
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row  mt-3" id="list">
+                {% for i in brands %}
+                <div class="col-md-2 col-6 mt-3 ">
+                    <div>
+                        <a href="/brand/{{i.slug}}"> <img src="{% static 'firmApp/images/sample.jpg'%}"
+                                class="img-fluid" alt="Card image cap"></a>
+                    </div>
+                    <a href="/brand/{{i.slug}}" class="btn">{{i.title}}</a>
+                </div>
+                {% endfor %}
+            </div></div>
         </div>
         <div class="col-md-3">
             <div class="facebookfan col-12 mt-2">
@@ -97,6 +126,21 @@
                         </p>
                     </div>
                 </div>
+            </div>
+
+            <div class="adsense mt-3">
+                {% for i in adsense_sideBar%}
+
+                <div class="ads mt-3"> 
+                    {% if i.adsense_image %}
+                    <img src="/media/{{i.adsense_image}}" class="img-fluid" style="float: right;  margin-top: 10px;" alt="My image"> 
+                   {% else %}
+                   {{i.adsense_code}}
+                   
+                    {% endif %} 
+                </div>
+                {% endfor %}
+                
             </div>
         </div>
     </div>
@@ -131,37 +175,7 @@
     </div>
     </div> -->
 <!-- folders -->
-<div class="container">
-    <div class="row">
-        <div class="col-md-9 shadow bg-white">
-            <div class="row my-3">
-                <form>
-                    <div class="row my-2">
-                        <div class="col-md-12">
-                            <input type="text" id="box" name="Search" autocomplete="off" class="form-control"
-                                placeholder="Search for Brand"
-                                style=" border:2px solid black; width:100%; float:left; height: 170%; padding-left: 2%;">
-                        </div>
-                        <div class="col-md-2">
-                            <!-- <button  class="btn auth" type="submit" style="float:right;"></button> -->
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="row  mt-3" id="list">
-                {% for i in brands %}
-                <div class="col-md-2 col-6 mt-3 ">
-                    <div>
-                        <a href="/brand/{{i.slug}}"> <img src="{% static 'firmApp/images/sample.jpg'%}"
-                                class="img-fluid" alt="Card image cap"></a>
-                    </div>
-                    <a href="/brand/{{i.slug}}" class="btn">{{i.title}}</a>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
+
 
 
 {% endblock %}

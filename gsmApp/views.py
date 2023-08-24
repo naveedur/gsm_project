@@ -1,62 +1,85 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
-import requests
+# import requests
 from.models import *
+from subscriptionApp.models import *
+from Adsense.models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm,UpdateUserForm
 import json
-import os
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
-import datetime
-from datetime import timedelta
+import uuid
+# import os
+# from django.contrib.auth import update_session_auth_hash
+# from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime as dt
-from dateutil.relativedelta import relativedelta
 from django.core.serializers.json import DjangoJSONEncoder
+# from django.http import JsonResponse
 
-today=datetime.date.today()
-def social_form(request):
-   
 
-    return render(request, 'firmApp/social_form.html')
+
+import uuid
+
 def register(request):
-		form = CreateUserForm()
-		if request.method == 'POST':    
-			form = CreateUserForm(request.POST)
-			if form.is_valid():
-				form.save()
-				user = form.cleaned_data.get('username')
-				messages.success(request, 'Account was created for ' + user)
-				return redirect('login')
-		data = {'form':form}
-		return render(request, 'firmApp/register.html', data) 
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user=form.save()
+            # user = form.cleaned_data.get('username')
+            messages.success(request, 'Account was created for ' + user.username)
+
+            randomCode = str(uuid.uuid4())[:8]
+            referralCode=user.username[:2] + randomCode
+            userReferral = user_profile(username=user, referral_code=referralCode)
+            userReferral.save()
+            if request.POST.get('referral'):
+                permissions = credits_permissions.objects.first()
+                if permissions and permissions.register:
+                    referral=request.POST.get('referral')
+                    userReferral=user_profile.objects.filter(referral_code=referral).first()
+                    userReferral.credits+=1
+                    userReferral.save()
+                   
+                    
+        return redirect('login')
+    data = {'form': form}
+    return render(request, 'firmApp/register.html', data)
 
 def logIn(request):
      if request.method == 'POST':
         username = request.POST.get('username')
         password =request.POST.get('password')
 
-        captcha_token=request.POST.get("g-recaptcha-response")
-        cap_url="https://www.google.com/recaptcha/api/siteverify"
-        cap_secret="6Lc678UgAAAAAKEk4w1Nw1rm5t3Wp9DOKhtbpXdP"
-        cap_data={"secret":cap_secret,"response":captcha_token}
-        cap_server_response=requests.post(url=cap_url,data=cap_data)
-        cap_json=json.loads(cap_server_response.text)
+        # captcha_token=request.POST.get("g-recaptcha-response")
+        # cap_url="https://www.google.com/recaptcha/api/siteverify"
+        # cap_secret="6Lc678UgAAAAAKEk4w1Nw1rm5t3Wp9DOKhtbpXdP"
+        # cap_data={"secret":cap_secret,"response":captcha_token}
+        # cap_server_response=requests.post(url=cap_url,data=cap_data)
+        # cap_json=json.loads(cap_server_response.text)
 
-        if cap_json['success']==False:
-            messages.error(request,"Invalid Captcha Try Again")
-            return redirect('login')
+        # if cap_json['success']==False:
+        #     messages.error(request,"Invalid Captcha Try Again")
+        #     return redirect('login')
          
         user = authenticate(request, username=username, password=password)
         if user is not None:
+
             login(request, user)
+            
             return redirect('home')
         else:
-            messages.info(request, 'Username OR password is incorrect')
+            messages.error(request, 'Username OR password is incorrect')
        
      return render(request, 'firmApp/login.html')
+def logoutUser(request):
+	logout(request)
+	return redirect('home')
+def social_form(request):
+   
+
+    return render(request, 'firmApp/social_form.html')
 def socialpassword(request):
     currentuser=request.user
     print('current user name is ')
@@ -78,12 +101,17 @@ def socialpassword(request):
         except AttributeError:
             print("Couldn't save password")
     return render(request, 'firmApp/auth/socialpassword.html')          
-def logoutUser(request):
-	logout(request)
-	return redirect('home')
 
+def userProfile(request):
+    profile=user_profile.objects.get(username=request.user)
+    subscription=pro_Members.objects.filter(userName=request.user).first()
+    
 
-
+    data={
+        'userProfile':profile,
+        'subscription':subscription
+    }
+    return render(request, "userDashboard/user_profile.html",data) 
 def update_profile(request):
     if request.method=='POST':
         form=UpdateUserForm(request.POST, instance=request.user)
@@ -95,72 +123,63 @@ def update_profile(request):
     data={
         'form':form
     }
-    return render(request, 'firmApp/update_profile.html',data)    
+    return render(request, 'userDashboard/update_profile.html',data)    
 
-# class home(ListView):
-    
-#     template_name='firmApp/home.html'
+def profile(request):
+    resourceList=resource.objects.all()
+    userName=request.user
+    userProfile=user_profile.objects.all()
+    user=userProfile.filter(username=userName).first()
+    print(userProfile)
 
-#     def get_context_data(self, **keywargs):
-#         resourceList=resource.objects.all()
-#         brands=brand.objects.all()
-#         social_link=socialLinks.objects.all() 
-#         context=super().get_context_data(**keywargs)
-#         context["qs_query"]=json.dumps(list(brand.objects.values()))
-#         data={
-#             'context':context,
-#             'brands':brands,
-#         # 'Mods':Mods,
-#           'resourceList':resourceList,
-#         'social_link':social_link
-#         }    
-    
-#         return data
+    if request.method=="POST":
+        phoneNomber=request.POST.get('phoneNumber')
+        name=request.POST.get('Name')
+        address=request.POST.get('address')
+        username=request.user
+        if user:
+            user.name=name
+            user.phoneNomber=phoneNomber
+            user.address=address
+            user.save()
+        else:
+            profile=user_profile(phoneNomber=phoneNomber, name=name, address=address,username=username)
+            profile.save()
+    data={
+        'resourceList':resourceList,
+        'user':user
+        }  
+    return render(request, "userDashboard/profile.html",data)
+
 
 def home(request):
-    resourceList=resource.objects.all()
+    adsense=adsense_ad.objects.filter(place_at="topBar").first()
+    adsense_sideBar=adsense_ad.objects.filter(place_at="sideBar")
+    print(adsense)
     brands=brand.objects.all()
     searchproducts=request.GET.get('Search')
     social_link=socialLinks.objects.all()  
-    print(list(brand.objects.values()) )
+    # print(list(brand.objects.values()) )
     if searchproducts!='' and searchproducts is not None:
         brands=brand.objects.filter(title__icontains=searchproducts)
         
-    data={
+    data={ 
         'jsondata':json.dumps(list(brand.objects.values())),
         'resourcejsondata':json.dumps(list(resource.objects.values()),cls=DjangoJSONEncoder),
-
         'brands':brands,
-        'resourceList':resourceList,
         'social_link':social_link
         }
     return render(request, 'firmApp/home.html', data)
 
 def models(request, slug):
-    resourceList=resource.objects.all()
     models=model.objects.filter(Brand__slug=slug)   
     print(models)
     data={
         'models':models,
         'brand_slug':slug,
-        'resourceList':resourceList
         }
     return render(request, 'firmApp/model.html', data)
 
-
-def search(request):
-    resourceList=resource.objects.all()
-    query=request.GET.get('model')
-    models=model.objects.filter(title__icontains=query) | model.objects.filter(Model_code__icontains=query)
-    data={
-        'models':models,
-        'resourceList':resourceList
-        }
-    return render(request, 'firmApp/search.html', data) 
-
-
-
-      
 
 def resources(request, slug):
     resourceList=resource.objects.all()
@@ -191,16 +210,16 @@ def resources(request, slug):
         }
     return render(request, 'firmApp/resource.html', data)
 
-def catagories(request, mTitle, cTitle):
+def catagories(request, mSlug, cSlug):
     resourceList=resource.objects.all()
-    mod=model.objects.filter(title=mTitle)
-    resources=resource.objects.filter(Model__title=mTitle, Categories__title=cTitle) 
+    mod=model.objects.filter(slug=mSlug)
+    resources=resource.objects.filter(Model__slug=mSlug, Categories__slug=cSlug) 
     Length=len(resources)
 
     data={
         'resources':resources,
         'mod':mod,
-        'model_title':mTitle,
+        
         'resourceList':resourceList
         }
     return render(request, 'firmApp/resource.html', data)   
@@ -210,7 +229,13 @@ def download(request, slug):
     # resourceList=resource.objects.all()
     Resource=resource.objects.get(slug=slug)
     pro_members=pro_Members.objects.all()
+    shortner_ads=shortner_ad.objects.first()
     
+    try:
+        user_exist=user_credit.objects.get(user=request.user)
+        contributor=True
+    except:
+        contributor=False    
     user=request.user
     if len(pro_members)>0:
         for i in pro_members:
@@ -220,231 +245,126 @@ def download(request, slug):
           get_pro=False
     else:
         get_pro=False
-         
+
+
+    resourceData = {
+        'slug': Resource.slug,
+    } 
+    print(resourceData)    
     data={
+        'resource': json.dumps(resourceData,cls=DjangoJSONEncoder), 
         'limitjsondata':json.dumps(list(resource.objects.values()),cls=DjangoJSONEncoder),
         'get_pro':get_pro,
         'Resource':Resource,
-        # 'resourceList':resourceList,
         'pro_member':pro_members,
+        'contributer':contributor,
+        'shortner_ads':shortner_ads
         }
     return render(request, 'firmApp/download.html', data)
-
-def membership(request):
-    packages=subscription.objects.all()
-   
-    data={
-        'packages':packages   
-    }
-    return render(request, 'firmApp/subscription/membership.html',data)    
-def usermembership(request, slug):
-    get_subscription=subscription.objects.get(slug=slug)
-    
-    userName=user=request.user
-    subscription_type=get_subscription
-    print(subscription_type)
-    start_date=dt.now().date()
-    expire_date=dt.now().date()+ relativedelta(months=+24)
-    active=''
-    if today > expire_date:
-        active=False
-    else:
-        active=True    
-    is_active=active
-    print(is_active)
-
-    save_pro=pro_Members(userName=userName, subscription_type=subscription_type, start_date=start_date, expire_date=expire_date, is_active=is_active)
-    save_pro.save()
-    return redirect('/')
-def payment(request, slug):
-    data={
-        'slug':slug   
-    }
-    return render(request, 'firmApp/subscription/payment.html',data) 
 
 def Category(request):
    
     return render(request, 'firmApp/category.html') 
 
-def basic(request):
+def search(request):
     resourceList=resource.objects.all()
-    social_link=socialLinks.objects.all()
-    onsite_data=onsitedata.objects.all()
+    query=request.GET.get('model')
+    models=model.objects.filter(title__icontains=query) | model.objects.filter(Model_code__icontains=query)
     data={
-        'resourcejsondata':json.dumps(list(resource.objects.values()),cls=DjangoJSONEncoder),
-        'resourceList':resourceList,
-        'social_link':social_link,
-        'onsite_data':onsite_data
-        }
-    return render(request, 'firmApp/basic.html', data)    
-
-
-def profile(request):
-    resourceList=resource.objects.all()
-    if request.method=="POST":
-        phoneNomber=request.POST.get('phoneNumber')
-        name=request.POST.get('Name')
-        address=request.POST.get('address')
-        username=request.user
-        profile=user_profile(phoneNomber=phoneNomber, name=name, address=address,username=username)
-        profile.save()
-    data={
-        'resourceList':resourceList
-        }  
-    return render(request, "firmApp/auth/profile.html",data)
-
-def userProfile(request):
-    resourceList=resource.objects.all()
-    data={
+        'models':models,
         'resourceList':resourceList
         }
-    return render(request, "firmApp/auth/user_profile.html",data)       
+    return render(request, 'firmApp/search.html', data) 
 
-def dashboard(request):
-    resourceList=resource.objects.all()
-    print(request.user.username)
-    userprofile=user_profile.objects.get(username=request.user)
+def returnPolicy(request):
+    Return=pages.objects.filter(select_page='return-policy').first()
     data={
-        'userprofile':userprofile,
-        'resourceList':resourceList
+        'return':Return
+    }
+    return render(request, 'firmApp/policies/returnPolicy.html',data)
+
+def refundPolicy(request):
+    refund=pages.objects.filter(select_page='refund-policy').first()
+    data={
+        'refund':refund
+    }
+
+    return render(request, 'firmApp/policies/refundPolicy.html',data)
+
+def cancellationPolicy(request):
+    cancellation=pages.objects.filter(select_page='cancellation-policy').first()
+    data={
+        'cancellation':cancellation
+    }
+    return render(request, 'firmApp/policies/cancellationPolicy.html',data)
+
+def privacyPolicy(request):
+    privacy=pages.objects.filter(select_page='privacy-policy').first()
+    data={
+        'privacy':privacy
+    }
+    return render(request, 'firmApp/policies/privacyPolicy.html',data)
+
+def termsOfServices(request):
+    terms=pages.objects.filter(select_page='terms-of-services').first()
+    data={
+        'terms':terms
+    }
+    return render(request, 'firmApp/policies/termsOfServices.html',data)
+
+def contactUs(request):
+    contact=pages.objects.filter(select_page='contact').first()
+    data={
+        'contact':contact
+    }
+    return render(request, 'firmApp/companyInfo/contactUs.html',data)   
+
+def aboutUs(request):
+    about=pages.objects.filter(select_page='about').first()
+    
+    data={
+        'about':about
+    }
+    return render(request, 'firmApp/companyInfo/aboutUs.html',data)    
+
+def customPage(request, slug):
+    page=custom_page.objects.get(slug=slug)
+
+    data={
+        'page':page
+    } 
+    return render(request, 'firmApp/customPages/customPageBasic.html',data)
+
+
+# def basic(request):
+#     resourceList=resource.objects.all()
+#     social_link=socialLinks.objects.all()
+#     onsite_data=onsitedata.objects.all()
+#     data={
         
-        }  
-    return render(request, "firmApp/blog/profile.html",data) 
+#         'resourceList':resourceList,
+#         'social_link':social_link,
+#         'onsite_data':onsite_data
+#         }
+#     return render(request, 'firmApp/basic.html', data)    
 
 
+      
+
+# def dashboard(request):
     
-    # return render(request, f"{i.title}.html")      
-    
+#     print(request.user.username)
+#     userprofile=user_profile.objects.get(username=request.user)
+#     data={
+#         'userprofile':userprofile,
+            
+#         }  
+#     return render(request, "firmApp/blog/profile.html",data) 
 
 
-# blogs function
-def blogs(request):
-    brands=brand.objects.all()
-    blogs=article.objects.all().order_by('-sno')
-    data={
-        'blogs':blogs,
-        'brands':brands
-        }
-    return render(request, "firmApp/blog/home.html", data)
-
-def mod(request,Title):
-    brands=brand.objects.all()
-    Bran=brand.objects.get(title=Title)
-    mod=model.objects.filter(Brand=Bran)
-
-    # blogs=article.objects.all()
-    data={
-        'mod':mod,
-        'brands':brands
-        }
-    return render(request, "firmApp/blog/home.html", data)    
-
-  
-
-def articles(request,slug):
-    Mod=model.objects.get(slug=slug)
-    brands=brand.objects.all()
-   
-    resources=resource.objects.filter(Model=Mod)
-    comments= BlogComment.objects.filter(modelpost=Mod, parent=None)
-    replies= BlogComment.objects.filter(modelpost=Mod).exclude(parent=None)
-    
-
-    replyDict={}
-    for reply in replies:
-        if reply.parent.sno not in replyDict.keys():
-            replyDict[reply.parent.sno]=[reply]
-        else:
-            replyDict[reply.parent.sno].append(reply)
-    data={
-        'resources':resources,
-        'Mod':Mod,
-        'brands':brands,
-        'comments':comments,
-        'replyDict':replyDict,
-        }
-    return render(request, "firmApp/blog/article.html", data)   
-
-def solution_articles(request):
-    brands=brand.objects.all()
-    solution=article.objects.all().order_by('-sno')[:1]
-    data={
-    'solution':solution,
-    'brands':brands
-    }
-    return render(request, "firmApp/blog/home.html", data) 
-
-def article_solution(request,Title):
-    mod=model.objects.get(title=Title)
-    solution=article.objects.filter(Model=mod)
-    print(solution)
-    
-    data={
-    'solution':solution,
-    }
-    return render(request, "firmApp/blog/article_solution.html", data)      
-def popular_artiles(request):
-    mostPopular=article.objects.all().order_by('-view_count')[:5]
-    brands=brand.objects.all()
-    data={
-        'mostPopular':mostPopular,
-        'brands':brands
-        
-    }
-    return render(request, "firmApp/blog/home.html", data) 
-def articlepage(request,slug):
-    brands=brand.objects.all()
-    solution=article.objects.get(slug=slug)
-    solution.view_count=solution.view_count+1
-    solution.save()
-    comments= BlogComment.objects.filter(post=solution, parent=None)
-    replies= BlogComment.objects.filter(post=solution).exclude(parent=None)
-    
-    replyDict={}
-    for reply in replies:
-        if reply.parent.sno not in replyDict.keys():
-            replyDict[reply.parent.sno]=[reply]
-        else:
-            replyDict[reply.parent.sno].append(reply)
-    data={
-        'solution':solution,
-        'comments':comments,
-        'replyDict':replyDict,
-        'brands':brands
-    }
-    return render(request, "firmApp/blog/article.html", data)   
-
-def postComment(request):
-    if request.method == "POST":
-        comment=request.POST.get('comment')
-        user=request.user
-        postSno =request.POST.get("postSno")
-        modelSno=request.POST.get("modelSno")
-        if postSno!='' and postSno is not None:
-            post= article.objects.get(sno=postSno)
-            a="post"
-        else:    
-            modelpost=model.objects.get(sno=modelSno)
-            a="modelpost"        
-        parentSno= request.POST.get('parentSno')
-        print(parentSno)
-        if parentSno =="":
-            if a=="post":
-                comment=BlogComment(comment= comment, user=user, post=post)
-            else:
-                comment=BlogComment(comment= comment, user=user, modelpost=modelpost )    
-            comment.save()
-            # messages.success(request, "Your comment has been posted successfully")
-        else:
-            parent= BlogComment.objects.get(sno=parentSno)
-            if a== "post":
-             comment=BlogComment(comment= comment, user=user, post=post , parent=parent)
-            else:
-             comment=BlogComment(comment= comment, user=user, modelpost=modelpost , parent=parent)
-            comment.save()
-            # messages.success(request, "Your reply has been posted successfully")
-    if a=="post":    
-     return redirect(f"/articl/{post.slug}")
-    else:
-     return redirect(f"/article/{modelpost.slug}")    
-
+# def adminHome(request):
+#     resources=resource.objects.all()
+#     data={
+#         'length':len(resources)
+#     }
+#     return render( request, "admin/index.html", data)

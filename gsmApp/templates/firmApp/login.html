@@ -16,11 +16,22 @@
 			<form action="{% provider_login_url 'google' %}" method="post" class="cursor-pointer mb-2 ">
 				{% csrf_token %}
 				<button type="submit" class="d-flex justify-content-center"
-					style="background-color: white; width:100%; height: 45px; border-radius: 5px; align-items: center;"><i
+					style="  background-color: white; width:100%; height: 45px; border-radius: 5px; align-items: center;"><i
 						class="fab fa-google fa-2x "></i>
 					&nbsp&nbsp Login with Google </button>
 			</form>
-
+			{% if messages %}
+			<div style="margin:20px 0">
+				{% for message in messages %}
+					<span style="border: 2px solid rgb(202, 12, 12);
+					color:rgb(133, 8, 8); 
+					border-radius: 10px;
+					font-weight: bold;
+					padding: 10px;
+					width: 100%;">{{ message }}</span>
+				{% endfor %}
+			</div>
+		{% endif %}
 			<form method="post" , action=""> {% csrf_token %}
 
 				<div class="mb-3">
@@ -32,7 +43,7 @@
 					<input type="password" class="form-control" name="password">
 				</div>
 
-				<div class="g-recaptcha " data-sitekey="6Lc678UgAAAAAOnD9Q91mmYXoAGdOX2kPIWf_18u"></div>
+				<!-- <div class="g-recaptcha " data-sitekey="6Lc678UgAAAAAOnD9Q91mmYXoAGdOX2kPIWf_18u"></div> -->
 
 
 				<button type="submit" class="btn btn-success mt-2" >Submit</button>&nbsp&nbsp&nbsp&nbsp <a class="m-4"

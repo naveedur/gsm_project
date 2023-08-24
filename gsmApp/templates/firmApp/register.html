@@ -45,6 +45,10 @@
 						<label for="passwordconfirm" class="form-label">Confirm_Password</label>
 						{{form.password2}}
 					</div>
+					<div class="mb-3">
+						<label  class="form-label">Referral Code</label>
+						<input type="text" name="referral">
+					</div>
 
 					<div class="g-recaptcha " data-sitekey="6Lc678UgAAAAAOnD9Q91mmYXoAGdOX2kPIWf_18u"></div>
 
@@ -54,7 +58,7 @@
 					<div class="d-flex justify-content-center links">
 						Already have an account? <a style="text-decoration: none;" href="{% url 'login' %}" class="ml-2">Login</a>
 					</div>
-				</div>
+				<!-- </div> -->
 				</form>
 			</div>
 		</div>

@@ -106,6 +106,14 @@
       color: white;
       background-color: #636B46;
     }
+    .notification{
+      color: white;
+      background-color: #373F27;
+      text-align: center;
+      padding:12px 0;
+      font-size: large;
+    }
+   
     </style>
     {% block css %} {% endblock %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/fontawesome.min.css"> 
@@ -122,8 +130,12 @@
     />
   </head>
   <body style="background-color: #f8f9fa">
+    {% if notifications.is_displayable %}
+    <div class="notification">   
+        <div>{{ notifications.message }}</div>
+    </div>
+    {% endif %}
     <div class="container-fluid first">
-
       <nav class="navbar sticky-top navbar-expand-md">
         <div class="container-fluid">
   
@@ -136,18 +148,21 @@
           <div class="navlist collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="  navbar-nav me-auto mb-2 mb-lg-0 ">
               <li class="nav-item">
-                <a class="nav-link active link" aria-current="page" href="/blogs">BLOG</a>
+                <a class="nav-link active link" aria-current="page" href="/blog">BLOG</a>
               </li>
+              {% for i in custom_header_page %}
+              <li class="nav-item">
+                <a class="nav-link active link" aria-current="page" href="/page/{{i.slug}}">{{i.title}}</a>
+              </li>
+              {% endfor %}
               <li class="nav-item">
                 <!-- <a class="nav-link active" aria-current="page" href="/register">Register</a> -->
               </li>
             </ul>
             <form class="d-flex auth" role="search">
-
-             
-                <a href="{{i.Facebook_URL}}"><i class="fab fa-facebook fa-1x"></i></a>
-                <a href="{{i.Twitter_URL}}"><i class="fab fa-twitter fa-1x"></i></a>
-                <a href="{{i.Youtube_URL}}"><i class="fab fa-youtube fa-1x"></i></a>
+              <a href={{social_links.Facebook_URL}}><i class="fab fa-facebook fa-1x"></i></a>
+                <a href="{{social_links.Twitter_URL}}"><i class="fab fa-twitter fa-1x"></i></a>
+                <a href="{{social_links.Youtube_URL}}"><i class="fab fa-youtube fa-1x"></i></a>
              
                 
               {% if user.is_superuser %}
@@ -184,7 +199,7 @@
       
     </div>
     <div class="container-fluid">
-      <div class="row second d-flex justify-content-center align-items-center mb-2">
+      <div class="row second d-flex justify-content-center align-items-center ">
         <div class="col-10 col-md-4 mb-2">
           <div >
           <form id="form_id" action=" " method="post"></div>
@@ -209,14 +224,18 @@
           </form>
         </div>
         <div class="col-md-8 float-right">
-          <img src="{% static 'firmApp/images/banner.jpg' %}" class="img-fluid" style="float: right;" alt="My image">  
+          {% if adsense.adsense_image%}
+          <img src="/media/{{adsense.adsense_image}}" class="img-fluid" style="float: right;" alt="My image">  
+          {%else%}
+          {{adsense.adsense_image}}
+          {%endif%}
         </div>
        
 
       
     </div></div>
      {% block body %} {% endblock%}
-    {% include 'firmApp/footer.html'%}
+    <div class="footerWrapper">{% include 'firmApp/footer.html'%}</div>
 
     <script type="text/javascript">
       (function titleMarquee() {

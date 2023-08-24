@@ -14,9 +14,12 @@ sitemaps={
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('gsmApp.urls')),
+    path('blog/', include('blogApp.urls')),
+    path('subscription/',include('subscriptionApp.urls')),
     path('accounts/', include('allauth.urls')),
     path('summernote/', include('django_summernote.urls')),
-    # path("django-check-seo/", include("django_check_seo.urls")),
+    path('paypal/', include('paypal.standard.ipn.urls')),
+
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap')
   
 ]

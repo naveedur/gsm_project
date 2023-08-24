@@ -38,7 +38,13 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.sites',
     'django.contrib.humanize',
+    
+    # 'admin_dashboard',
+    'paypal.standard.ipn', 
+    'Adsense',
     'gsmApp',
+    'blogApp',
+    'subscriptionApp',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -48,6 +54,8 @@ INSTALLED_APPS = [
     'django_social_share',
     # "django_check_seo",
     'taggit',
+    'django_select2',
+    'tagulous'
 ]
 INSTALLED_APPS += ('django_summernote', )
 
@@ -71,12 +79,16 @@ TEMPLATES = [
         'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
+    
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                 'gsmApp.templatetags.context_processors.user_data',
+                
             ],
+            
         },
     },
 ]
@@ -156,13 +168,13 @@ IMPORT_EXPORT_USE_TRANSACTIONS=True
 
 # mail server settings
 SITE_ID=1
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER ='navedur1039@gmail.com'
-EMAIL_HOST_PASSWORD = 'qohaprjirfbefwip'
-# qohaprjirfbefwip
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER ='navedur1039@gmail.com'
+# EMAIL_HOST_PASSWORD = 'jnazkvohhspviyte'
+# # qohaprjirfbefwip
 
 
 # auth
@@ -218,4 +230,8 @@ DJANGO_CHECK_SEO_AUTH = {
 DJANGO_CHECK_SEO_AUTH_FOLLOW_REDIRECTS = True
 
 
+
+# paypal 
+PAYPAL_TEST = False
+PAYPAL_RECEIVER_EMAIL = 'engremran89@gmail.com'
 

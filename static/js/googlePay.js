@@ -81,3 +81,13 @@ function processPaymentData(paymentData){
         body: paymentData,
     })
 }
+
+<!-- {% block javascript %}
+  <script src="{%static 'js/googlePay.js'%}"></script>
+
+  <script
+  async
+  src="https://pay.google.com/gp/p/js/pay.js"
+  onload="onGooglePayLoaded()">
+</script>
+{% endblock %} -->

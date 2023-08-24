@@ -20,9 +20,26 @@
 
   .Second li a:hover,
   a:active {
-    background-color: #7abecc;
+    background-color: #636B46;
     color: #f8f9fa;
     text-decoration: underline;
+  }
+  .listWrapper{
+    position: relative;
+  }
+  .length{
+    position: absolute;
+    top: 6px;
+    right: 3px;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    background-color: #373F27;
+    color: white;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    
   }
 
   .table_col {
@@ -97,21 +114,21 @@
           {% for cat in mod %}
 
           {% for i in cat.Cat.all %}
-
-
-
-          <!-- <li><a href="/resources/{{i.title}}" onclick="myfunction()" id="cat"><a href='javascript:void();'>{{i.title}}</a></a></li> -->
-          <li><a class=" btn btn-small navlink position-relative"
-              href="/catagories/{{cat.title}}/{{i.title}}">{{i.title}}
-              {% for l in Length%} {% if forloop.parentloop.counter == forloop.counter %}{% if l > 0 %} {{l}}{% endif %}
+          <li><div class="listWrapper">
+            <a class=" btn btn-small navlink position-relative"
+              href="/catagories/{{cat.slug}}/{{i.slug}}">{{i.title}}</a>
+              {% for l in Length%} {% if forloop.parentloop.counter == forloop.counter %}{% if l > 0 %} 
+              <span class="length">{{l}}</span>
+              {% endif %}
               {%endif%}
               {% endfor%}
 
-            </a></li>
+            
+          </div></li>
 
           {% endfor %}
-          <li><a class=" btn btn-small navlink position-relative" href="/solutions/{{model_title}}">Solutions
-            </a></li>
+          <li><a class=" btn btn-small navlink position-relative" href="/solutions/{{cat.title}}">Solutions
+          </a></li>
           {% endfor %}
 
 

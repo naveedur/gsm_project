@@ -1,0 +1,13 @@
+{% extends 'firmApp/basic.html'%}
+{% block title %}term of services {% endblock %}
+{% block css %}<style></style>{% endblock %}
+{% block body %}
+<div class=" container my-4 d-flex justify-content-center " >
+    <div class="row d-flex justify-content-center">
+       <div class="col-md-8 col-12">
+           <h1 class="text-center mb-2">{{terms.title}}</h1>
+           <p class="text-justify">{{terms.description | safe}}</p>
+       </div>
+    </div>
+   </div>
+{% endblock %}

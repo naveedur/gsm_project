@@ -1,0 +1,10 @@
+{% extends "admin/widgets/widget.html" %}
+{% load static %}
+{% block contents %}
+  <div>
+    {{ widget }}
+    <a href="{{ widget.url }}" class="related-lookup" id="lookup_{{ widget.attrs.id }}" title="{{ widget.label }} Lookup">
+      <img src="{% static 'admin/img/icon-addlink.svg' %}" width="10" height="10" alt="Add Another"/>
+    </a>
+  </div>
+{% endblock %}

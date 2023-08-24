@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <!-- create_brand.html -->
+<h1>Create Brand</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_brand_name">Brand Name</label>
+        <input type="text" name="brand_name" id="id_brand_name" class="form-control" required>
+    </div>
+    <input type="submit" value="Create Brand">
+</form>
+
+</body>
+</html>

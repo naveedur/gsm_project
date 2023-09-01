@@ -14,3 +14,6 @@ admin.site.register(single_file_payment)
 
 admin.site.register(user_credit)
 admin.site.register(credits_permissions)
+admin.site.register(daily_download_limit)
+admin.site.register(free_files_permissions)
+

@@ -85,7 +85,7 @@ class modelAdmin(ImportExportModelAdmin):
     list_display_links=("title","sno")
     # list_editable=('t'Model_code','Chipset','Cat__title')
     
-    fields=('title','Model_code','Chipset','chipset_description','image','Brand','Cat','slug')
+    fields=('title','Model_code','Chipset','chipset_description','image','Brand','Cat','Tags','slug')
 admin.site.register(model,modelAdmin)
 
 
@@ -156,16 +156,6 @@ admin.site.register(pages,pageAdmin)
 class customPageAdmin(SummernoteModelAdmin):
     summernote_fields=('description')
 admin.site.register(custom_page,customPageAdmin)
-
-# admin.site.register(MyCustomTag)
-
-
-
-# class articleAdmin(SummernoteModelAdmin):
-#     summernote_fields = ('desc',)
-#     list_display = ("sno","title" )
-# admin.site.register(article,articleAdmin)
-
 
 class PersonAdmin(admin.ModelAdmin):
     list_display = ("title","size","Brand", "Model", "Categories","Tag" )

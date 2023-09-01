@@ -96,13 +96,28 @@ def payment(request, slug):
     return render(request, 'subscriptionApp/payment.html',data) 
 
 def incrementFileCount(request,slug):
+    print("hello")
+            
     if request.user.is_authenticated:
         try:
             userName = request.user
+            print("hello")
+            print(userName)
             pro_member = pro_Members.objects.get(userName=userName)
+            daily_limit_user=daily_download_limit.objects.get(user=userName)
             Resource=resource.objects.get(slug=slug)
             size=int(Resource.size)
-           
+
+            #add daily limit count
+            if  Resource.pro:
+                daily_limit_user.subscription_downloads+=1
+            else:
+                daily_limit_user.free_file_downloads+=1    
+            daily_limit_user.save()
+            print("hello")
+            print(userName)
+
+            #add subscription limit
             if pro_member.is_active:
                 pro_member.data_download = int(pro_member.data_download) + size
                 pro_member.files_download = int(pro_member.files_download) + 1 

@@ -2,7 +2,6 @@
 from distutils.archive_util import make_zipfile
 from distutils.command.upload import upload
 from email.policy import default
-# from tkinter import CASCADE, MULTIPLE
 from django.db import models
 import uuid
 from django.utils import timezone
@@ -21,27 +20,26 @@ from taggit.models import Tag
 
 def slug_set(sender, instance, **kwargs):
      instance.slug = slugify(instance.title)
+
+#category model     
 class category(models.Model):
     title=models.CharField(max_length=100)
     slug=models.SlugField(default="", blank=True)
 
     def __str__(self):
      return self.title 
-
-
 pre_save.connect(slug_set, sender=category)  
 
+#brand model
 class brand(models.Model):
     title=models.CharField(max_length=100)
     slug=models.SlugField(default="", blank=True, unique=True)
 
-
     def __str__(self):
      return self.title
-
-
 pre_save.connect(slug_set, sender=brand)     
 
+#model model
 class model(models.Model):
     sno= models.AutoField(primary_key=True)
     title=models.CharField(max_length=100)
@@ -52,19 +50,29 @@ class model(models.Model):
     chipset_description=models.CharField(max_length=400, null=True)
     Brand = models.ForeignKey(brand,on_delete=models.CASCADE, default="")
     slug=models.SlugField(default="", blank=True)
-    skills = TagField() 
- 
+    Tags = TaggableManager(blank=True) 
+
     def brandname(self):
         return self.Brand__title
     def categories(self):
         return ",".join([str(p) for p in self.Cat.all()])
     def __str__(self):
      return self.title
+    
+@receiver(m2m_changed, sender=model.Tags.through)
+def add_model_tags(sender, instance, action, pk_set, **kwargs):
+    if action == 'post_add':
+        tags = [instance.title,"firmware"]
+        for tag in tags:
+            if tag not in instance.Tags.names():
+                instance.Tags.add(tag)
 
 pre_save.connect(slug_set, sender=model)   
 
 def get_default_superuser():
     return User.objects.filter(is_superuser=True).first()
+
+#resource model
 class resource(models.Model):
     uploaded_by=models.ForeignKey(User,blank=True, on_delete=models.SET_NULL, null=True)
     title=models.CharField(max_length=100)
@@ -80,15 +88,7 @@ class resource(models.Model):
     pro=models.BooleanField(default=False)
     verified=models.BooleanField(default=False)
     slug=models.SlugField(default="", unique=True, blank=True)
-    tags_char=models.TextField( blank=True)
     Tags = TaggableManager(blank=True) 
-    
-
-    
-    # def save(self, *args, **kwargs):
-    #     tags = [self.Brand, self.Model, self.title]
-    #     self.Tags.set("first")
-    #     super().save(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         check=resource.objects.all()
@@ -101,14 +101,7 @@ class resource(models.Model):
             newid=int(getid)+1
         if not self.pk:
             self.pk=newid
-        
-        # tag_names = [self.title, self.varient, self.size]
-        # for tag_name in tag_names:
-        #     tag, created = Tag.objects.get_or_create(name=tag_name)
-        #     self.Tags.add(tag)
-        # self.Tags.set("first")
-        # self.Tags.add(self.title)
-        # self.Tags.add(self.varient)
+
         tags = [self.title, self.varient,"firmware"]
         for tag in tags:
             if tag not in self.Tags.names():
@@ -128,44 +121,18 @@ class resource(models.Model):
                         referral_user=user_profile.objects.get(referral_code=contributer.referrer_code)
                         referral_user.credits+=1
                         referral_user.save()
-                        
-
-
         super(resource, self).save(*args, **kwargs)
         
-    
-# @receiver(pre_save, sender=resource)
-# def add_tags(sender, instance, **kwargs):
-#     tags=instance.varient
-#     instance.Tags.add(tags)
-
 @receiver(m2m_changed, sender=resource.Tags.through)
-def add_tags(sender, instance, action, pk_set, **kwargs):
+def add_resource_tags(sender, instance, action, pk_set, **kwargs):
     if action == 'post_add':
         tags = [instance.title, instance.varient,"firmware"]
         for tag in tags:
             if tag not in instance.Tags.names():
                 instance.Tags.add(tag)
-
-
-# @receiver(post_save, sender=resource)
-# def add_tags(sender, instance, **kwargs):
-#     tags=instance.varient
-#     instance.Tags.add(tags)    
-      
-
-# @receiver(post_save, sender=resource)
-# def tag_set(sender, instance, **kwargs):
-#     instance.size = instance.title
-#     instance.Tags.add(instance.varient)
-#     print(instance.Tags.all())
-#     instance.Tags.set(*instance.Tags.all(), clear=True)
-#     print(instance.Tags.all())
 pre_save.connect(slug_set, sender=resource)
 
-
-    
-
+#userprofile
 class user_profile(models.Model):
     username=models.ForeignKey(User, on_delete=models.CASCADE)
     phoneNomber=models.CharField( max_length=14, blank=True)
@@ -177,8 +144,8 @@ class user_profile(models.Model):
     
     def __str__(self):
      return self.username.username
+    
 # ads managments  
-
 class ads(models.Model):
     
      CHOICES = (

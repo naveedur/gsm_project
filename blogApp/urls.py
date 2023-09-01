@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 
 from.views import *
 from.import views
+from .rss_feed.feeds import ArticleFeed
 
 urlpatterns = [
     path('postComment', views.postComment, name="postComment"),
@@ -14,6 +15,8 @@ urlpatterns = [
     path('solutions/<slug:Title>/',article_solution, name="article-solution"),
     path('article/<slug:postSlug>/', articlepage, name='postpage'),
     path('popular_articles/',popular_artiles, name='popular_articles'),
+    path('rss-feed/',ArticleFeed(), name='rss_feed'),
+
 ]
 
     

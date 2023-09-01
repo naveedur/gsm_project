@@ -15,6 +15,9 @@ import uuid
 # from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime as dt
 from django.core.serializers.json import DjangoJSONEncoder
+from subscriptionApp.middleWares import DailyDownloadLimitMiddleware  
+from django.http import HttpResponse
+
 # from django.http import JsonResponse
 
 
@@ -226,8 +229,24 @@ def catagories(request, mSlug, cSlug):
                    
 @login_required(login_url='/login/')
 def download(request, slug):
-    # resourceList=resource.objects.all()
     Resource=resource.objects.get(slug=slug)
+
+    # Determine if the resource is of type "pro" or not
+    is_resource_pro = Resource.pro
+    
+    # Store the resource type and download limit preference in the session
+    request.session['resource_type'] = is_resource_pro
+    request.session['response_type'] = 'subscription' if is_resource_pro else 'free'
+    request.session.save()
+
+
+
+    if request.session.get('download_limit_exceeded', False):
+         messages.error(request, "You have reached your daily download limit.")
+         del request.session['download_limit_exceeded']  # Clear the flag
+         return render(request, 'firmApp/download.html', {"Resource": Resource})
+    
+    
     pro_members=pro_Members.objects.all()
     shortner_ads=shortner_ad.objects.first()
     

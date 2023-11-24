@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ feed.title }}</h1>
+<p>{{ feed.description }}</p>
+<ul>
+  {% for item in items %}
+    <li>
+      <h2><a href="{{ item.link }}">{{ item.title }}</a></h2>
+      <p>{{ item.description }}</p>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

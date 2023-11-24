@@ -19,6 +19,12 @@ class ArticleFeed(Feed):
 
     def item_link(self, item):
         return reverse('postpage', args=[item.slug])  # Use 'sno' as the identifier
+    
+     # Specify the template name and content type
+    template_name = 'blogApp/feeds.html'
+    content_type = 'text/html'
+
+
 
     # # Define the pub_date for each item
     # def item_pubdate(self, item):

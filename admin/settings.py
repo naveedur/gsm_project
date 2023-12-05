@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     
     # 'admin_dashboard',
-    # 'paypal.standard.ipn', 
+    'paypal.standard.ipn', 
     'Adsense',
     'gsmApp',
     'blogApp',

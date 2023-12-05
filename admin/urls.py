@@ -18,7 +18,7 @@ urlpatterns = [
     path('subscription/',include('subscriptionApp.urls')),
     path('accounts/', include('allauth.urls')),
     path('summernote/', include('django_summernote.urls')),
-    path('paypal/', include('paypal.standard.ipn.urls')),
+    # path('paypal/', include('paypal.standard.ipn.urls')),
 
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap')
   
